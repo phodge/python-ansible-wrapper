@@ -186,10 +186,10 @@ class Play(Block):
         else:
             self._run_play(saveas=saveas, hosts=hosts, verbosity=verbosity)
 
-    def _run_play(self, *, cwd: Path, hosts: str, saveas: Path, verbosity: int) -> None:
+    def _run_play(self, *, hosts: str, saveas: Path, verbosity: int) -> None:
         assert len(self._tasks), "No tasks"
 
-        log.info(f"Generating playbook {important(saveas.relative_to(cwd))}")
+        log.info(f"Generating playbook {important(saveas.relative_to(self._root))}")
         with open(saveas, 'w') as f:
             yaml.dump([{"hosts": hosts, "tasks": list(self.get_tasks())}], f)
 
@@ -200,5 +200,5 @@ class Play(Block):
             str(saveas),
         ]
         cmd.extend(['--verbose'] * verbosity)
-        log.info(f"Running ansible-playbook {important(saveas.relative_to(cwd))}")
-        run(cmd, cwd=cwd, check=True)
+        log.info(f"Running ansible-playbook {important(saveas.relative_to(self._root))}")
+        run(cmd, cwd=self._root, check=True)
