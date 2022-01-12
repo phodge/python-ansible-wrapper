@@ -1,0 +1,14 @@
+name: CI Actions
+on: [push]
+jobs:
+  linters:
+    runs-on: python:3.9
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: install deps
+        run: pip3.9 install -r requirements.txt -r requirements_dev.txt
+      - name: flake8
+        run: flake8 python_ansible_wrapper
+      - name: mypy
+        run: mypy .
