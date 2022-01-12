@@ -2,8 +2,12 @@ name: CI Actions
 on: [push]
 jobs:
   linters:
-    runs-on: python:3.9
+    runs-on: ubuntu-latest
     steps:
+      - name: install python3
+        uses: actions/setup-python@V2
+        with:
+          python-version: '3.9'
       - name: Check out repository code
         uses: actions/checkout@v2
       - name: install deps
