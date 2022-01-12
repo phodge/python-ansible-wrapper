@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: install python3
-        uses: actions/setup-python@V2
+        uses: actions/setup-python@v2
         with:
           python-version: '3.9'
       - name: Check out repository code
