@@ -175,8 +175,6 @@ class Block:
 class Play(Block):
     def __init__(self, name: str, *, root: Path):
         assert '/' not in name
-        # TODO: put this back into p90 project?
-        #assert name.endswith('.generated.yml')
         assert name.endswith('.yml')
 
         super().__init__(name, root=root)
