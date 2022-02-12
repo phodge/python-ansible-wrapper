@@ -58,6 +58,37 @@ class Block:
             "become_user": "root",
         })
 
+    def unixuser(
+        self,
+        name: str,
+        group: str,
+        *,
+        extragroups: List[str] = None,
+        uid: int = None,
+        state: Literal['present', 'absent'] = 'present',
+        system: bool = False,
+    ) -> None:
+        verb = 'Create' if state == 'present' else 'Remove'
+        userinfo = {
+            'name': name,
+            'group': group,
+        }
+        if extragroups:
+            userinfo['groups'] = ",".join(extragroups)
+        if uid is not None:
+            userinfo['uid'] = str(uid)
+        if state != 'present':
+            userinfo['state'] = state
+        if system:
+            userinfo['system'] = 'yes'
+
+        self._tasks.append({
+            "name": f'{verb} unix user {name!r}',
+            "ansible.builtin.user": userinfo,
+            "become": True,
+            "become_user": "root",
+        })
+
     def mkdir(self, path: str, *, owner: str = 'root', mode: str) -> None:
         self._tasks.append({
             "name": f"mkdir {path}",
