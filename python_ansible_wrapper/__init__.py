@@ -50,9 +50,12 @@ class Block:
             groupinfo['state'] = state
         if system:
             groupinfo['system'] = 'yes'
+
         self._tasks.append({
-            'name': f'{verb} unix group {name!r}',
-            'ansible.builtin.group': groupinfo,
+            "name": f'{verb} unix group {name!r}',
+            "ansible.builtin.group": groupinfo,
+            "become": True,
+            "become_user": "root",
         })
 
     def mkdir(self, path: str, *, owner: str = 'root', mode: str) -> None:
