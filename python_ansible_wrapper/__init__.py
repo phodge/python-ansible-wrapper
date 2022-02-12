@@ -154,12 +154,12 @@ class Block:
         }
         if chdir is not None:
             detail['chdir'] = chdir
-        task = {
+        task: dict[str, Any] = {
             "name": title,
-            "become": True,
             "command": detail,
         }
         if become is not None:
+            task['become'] = True
             task['become_user'] = become
 
         self._tasks.append(task)
