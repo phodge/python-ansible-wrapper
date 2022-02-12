@@ -3,7 +3,7 @@ from os.path import basename
 from pathlib import Path
 from subprocess import run
 from tempfile import TemporaryDirectory
-from typing import Any, Dict, Iterator, List, Union
+from typing import Any, Dict, Iterator, List, Literal, Union
 
 import yaml
 from chromalog.mark.helpers.simple import important
@@ -30,6 +30,29 @@ class Block:
                 # FIXME: do we want this turned on?
                 # "update_cache": True,
             },
+        })
+
+    def unixgroup(
+        self,
+        name: str,
+        *,
+        gid: int = None,
+        state: Literal['present', 'absent'] = 'present',
+        system: bool = False,
+    ) -> None:
+        verb = 'Create' if state == 'present' else 'Remove'
+        groupinfo = {
+            'name': name,
+        }
+        if gid is not None:
+            groupinfo['gid'] = str(gid)
+        if state != 'present':
+            groupinfo['state'] = state
+        if system:
+            groupinfo['system'] = 'yes'
+        self._tasks.append({
+            'name': f'{verb} unix group {name!r}',
+            'ansible.builtin.group': groupinfo,
         })
 
     def mkdir(self, path: str, *, owner: str = 'root', mode: str) -> None:
