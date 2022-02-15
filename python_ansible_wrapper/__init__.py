@@ -203,12 +203,12 @@ class Block:
             "copy": how,
         }
 
-        if root:
-            assert owner is None or owner == 'root'
+        if root or owner:
             task["become"] = True
-        elif owner is not None:
-            task["become"] = True
-            task["become_user"] = owner
+            task["become_user"] = 'root'
+
+        if owner:
+            how['owner'] = owner
 
         self._tasks.append(task)
 
