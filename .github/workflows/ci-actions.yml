@@ -17,6 +17,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: install poetry and re-export requirements.txt
         run: |
+          apt-get update
           apt-get install python3 python3-pip
           pip3 install poetry
           poetry export -f requirements.txt -o requirements.txt
