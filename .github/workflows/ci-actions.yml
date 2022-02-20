@@ -18,7 +18,7 @@ jobs:
       - name: install poetry and re-export requirements.txt
         run: |
           apt-get update
-          apt-get install python3 python3-pip
+          apt-get install -y python3 python3-pip
           pip3 install poetry
           poetry export -f requirements.txt -o requirements.txt
           poetry export -f requirements.txt -o requirements_dev.txt --dev
