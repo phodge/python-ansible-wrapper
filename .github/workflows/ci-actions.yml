@@ -1,6 +1,38 @@
 name: CI Actions
 on: [push]
 jobs:
+  export-requirements:
+    name: "Export requirements.txt"
+    # skip this job when already in a -fixup branch
+    if: "!endsWith(github.head_ref, '-fixup')"
+    runs-on: ubuntu-latest
+    permissions:
+      # this job needs permissions to push new commits and create/modify
+      # pull requests
+      contents: write
+      pull-requests: write
+    container:
+      image: vertigo1/magicpr-demo:latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: install poetry and re-export requirements.txt
+        run: |
+          pip install poetry
+          bin/ci/init_submodules "${{ secrets.PYTHON_CI_TOOLS_ACCESS_TOKEN }}"
+          bin/ci/export_requirements_txt
+      - name: prevent temporary CI changes to .gitmodules paths
+        # FIXME: would we want to turn this into an '--exclude=.gitmodules' rule for MagicPR?
+        run: git checkout -- .gitmodules
+      - name: push any changes as a new PR
+        run: |
+          magicpr suggest-changes \
+            --auth-token="${{ github.token }}" \
+            --commit-author="${{ github.event.commits[0].author.name }}" \
+            --commit-email="${{ github.event.commits[0].author.email }}" \
+            --branch-suffix=-fixup \
+            --commit-message='Re-exported requirements.txt and/or requirements_dev.txt' \
+            --guidance='Please merge requirements.txt and/or requirements_dev.txt which have been exported from the latest poetry.lock'
+
   linters:
     runs-on: ubuntu-latest
     steps:
