@@ -18,11 +18,8 @@ jobs:
       - name: install poetry and re-export requirements.txt
         run: |
           pip install poetry
-          bin/ci/init_submodules "${{ secrets.PYTHON_CI_TOOLS_ACCESS_TOKEN }}"
-          bin/ci/export_requirements_txt
-      - name: prevent temporary CI changes to .gitmodules paths
-        # FIXME: would we want to turn this into an '--exclude=.gitmodules' rule for MagicPR?
-        run: git checkout -- .gitmodules
+          poetry export -f requirements.txt -o requirements.txt
+          poetry export -f requirements.txt -o requirements_dev.txt --dev
       - name: push any changes as a new PR
         run: |
           magicpr suggest-changes \
