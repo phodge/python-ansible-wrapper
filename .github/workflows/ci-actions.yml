@@ -20,8 +20,8 @@ jobs:
           apt-get update
           apt-get install -y python3 python3-pip
           pip3 install poetry
-          poetry export -f requirements.txt -o requirements.txt
-          poetry export -f requirements.txt -o requirements_dev.txt --dev
+          poetry export --without-hashes -f requirements.txt -o requirements.txt
+          poetry export --without-hashes -f requirements.txt -o requirements_dev.txt --dev
       - name: push any changes as a new PR
         run: |
           magicpr suggest-changes \
