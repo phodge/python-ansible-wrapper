@@ -1,0 +1,23 @@
+[tool.poetry]
+name = 'python-ansible-wrapper'
+version = "0.0.0"
+description = ""
+license = "MIT"
+authors = ["Peter Hodge"]
+packages = [
+    { include = "python_ansible_wrapper" },
+]
+include = ["py.typed"]
+
+[tool.poetry.dependencies]
+python = ">=3.9.1,<4.0"
+PyYAML = "^6.0"
+chromalog = "^1.0.5"
+
+[tool.poetry.dev-dependencies]
+mypy = "0.901"
+flake8 = "^4.0.1"
+types-PyYAML = "^6.0.3"
+
+[build-system]
+requires = ["setuptools>=40.0", "wheel"]
