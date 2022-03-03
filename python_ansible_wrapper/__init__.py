@@ -17,19 +17,28 @@ class Block:
         self._tasks: List[Union[Block, Dict[str, Any]]] = []
         self._root = root
 
-    def apt_present(self, packages: List[str], *, title: str = None) -> None:
+    def apt_present(
+        self,
+        packages: List[str],
+        *,
+        title: str = None,
+        update_cache: bool = False,
+    ) -> None:
         if title is None:
             title = f"Install {', '.join(packages)}"
+
+        detail: Dict[str, Any] = {
+            "name": packages,
+        }
+
+        if update_cache is not False:
+            detail['update_cache'] = update_cache
 
         # FIXME: do we want to run apt-update first?
         self._tasks.append({
             "name": title,
             "become": True,
-            "apt": {
-                "name": packages,
-                # FIXME: do we want this turned on?
-                # "update_cache": True,
-            },
+            "apt": detail
         })
 
     def unixgroup(
