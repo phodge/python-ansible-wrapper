@@ -191,8 +191,7 @@ class Block:
         }
 
         if title is None:
-            assert src is not None
-            title = f"Upload {basename(src)} to {dest}"
+            title = f"Upload {basename(src)} to {dest}" if src else f"Create {dest}"
 
         if src is not None:
             assert content is None
