@@ -111,6 +111,45 @@ class Block:
             },
         })
 
+    def unlink(self, path: str, *, become: str = 'root') -> None:
+        self.other(
+            name=f"Unlink (rm) {path}",
+            become=become,
+            file={
+                "path": path,
+                "state": "absent",
+                "force": True,
+            },
+        )
+
+    def symlink(
+        self,
+        path: str,
+        *,
+        src: str,
+        owner: str,
+        group: str,
+        mode: int = 0o644,
+        force: bool = False,
+        become: str = None,
+    ) -> None:
+        self.other(
+            f"Create '{path}' symlink to {src}",
+            become=become or owner,
+            file={
+                "path": path,
+                "state": "link",
+                "src": src,
+                "owner": owner,
+                "group": group,
+                "mode": mode,
+                # Force the creation of the symlinks in two cases: the source file does not exist (but
+                # will appear later); the destination exists and is a file (so, we need to unlink the
+                # path file and create symlink to the src file in place of it).
+                "force": force,
+            },
+        )
+
     def other(
         self,
         name: str,
